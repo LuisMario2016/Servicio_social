@@ -135,3 +135,34 @@ datos_filtrados <- subset(df_forsec_limpio, layer != 0)
 
 df_secma_limpio<- na.omit(df_secma)
 datosfil_secma<- subset(df_secma_limpio, layer != 0)
+
+#############################################################################################################
+#Hacer un 
+rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
+rasX.primn_2015 <-raster("states.nc", var="primn",band=1165)
+
+rasX.secdf_2015 <-raster("states.nc", var="secdf",band=1165)
+rasX.secdn_2015 <-raster("states.nc", var="secdn",band=1165)
+
+rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
+
+
+df_primf<-as.data.frame(rasX.primf_2015)
+df_secma<-as.data.frame(rasX.secma_2015)
+
+valoresminsecma<- rasX.secma_2015==1
+plot(valoresminsecma)
+hist(df_secma$secondary.mean.age)
+
+valoresmaxprimf<- rasX.primf_2015==1
+plot(valoresmaxprimf)
+x<-unique(df_primf)
+hist(df_primf$forested.primary.land)
+
+
+regla <- c(1, 1, 1098.66602)
+secma_reasig <- reclassify(rasX.secma_2015, regla)
+
+coords <- xyFromCell(rasX.secma_2015, 1:ncell(rasX.secma_2015))
+valores_iguales_a_1 <- extract(rasX.secma_2015, coords[as.logical(rasX.secma_2015[] == 1), ])
+
