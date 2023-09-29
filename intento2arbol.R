@@ -166,3 +166,23 @@ secma_reasig <- reclassify(rasX.secma_2015, regla)
 coords <- xyFromCell(rasX.secma_2015, 1:ncell(rasX.secma_2015))
 valores_iguales_a_1 <- extract(rasX.secma_2015, coords[as.logical(rasX.secma_2015[] == 1), ])
 
+## Para poder elimina los datos donde sea =1 en dos raster, maxprimf y minsecma, se debe hacer:
+
+exclusion <- function(x, y) {
+  resultado <- ifelse(x == 1 & y == 1, NA, ifelse(x == 1 | y == 1, 1, NA))
+  return(resultado)
+}
+
+resultado_exclusion <- overlay(valoresmaxprimf, valoresminsecma, fun = exclusion)
+resultado_exclusion<- raster(resultado_exclusion)
+plot(resultado_exclusion)
+
+
+#con difff
+rasx<- valoresminsecma-valoresmaxprimf
+plot(rasx)
+
+
+
+
+
