@@ -137,7 +137,7 @@ df_secma_limpio<- na.omit(df_secma)
 datosfil_secma<- subset(df_secma_limpio, layer != 0)
 
 #############################################################################################################
-#Hacer un 
+#Hacer un condicional 
 rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.primn_2015 <-raster("states.nc", var="primn",band=1165)
 
@@ -181,6 +181,62 @@ plot(resultado_exclusion)
 #con difff
 rasx<- valoresminsecma-valoresmaxprimf
 plot(rasx)
+
+Spatial(sts$primf)
+library(sp)
+
+##########################################################
+rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
+rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
+
+df_primf<-as.data.frame(rasX.primf_2015)
+df_secma<-as.data.frame(rasX.secma_2015)
+
+max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
+rasX.secma_2015[rasX.primf_2015 == 1]<-max.secma
+summary(rasX.secma_2015@data@values)
+
+plot(rasX.secma_2015)
+
+rasX.primf_2015[rasX.secma_2015 == 1]<-max.secma
+plot(rasX.primf_2015)
+
+###################### AUTOCORRELACION ESPACIAL###############
+install.packages("spdep")
+library(spdep)
+library(sp)
+#establecer latitudes mex
+latitud_min <- 14.5
+latitud_max <- 32.7
+longitud_min <- -118.4
+longitud_max <- -86.7
+
+num_puntos <- 100  # Número de puntos de interés
+set.seed(123)  # Para reproducibilidad
+#coordenadas aleatorias
+random_coords <- data.frame(
+  Longitud = runif(num_puntos, longitud_min, longitud_max),
+  Latitud = runif(num_puntos, latitud_min, latitud_max))
+
+#crear sapatialpoints
+puntos_interes_mexico <- SpatialPointsDataFrame(
+  coords = random_coords,
+  data = data.frame(Nombre = 1:num_puntos))
+
+raster_matrix <- raster::extract(rasX.secma_2015, rasX.primf_2015, method = "simple")##nosepudo
+values_secma <- extract(rasX.secma_2015, puntos_interes_mexico)
+values_primf <- extract(rasX.primf_2015, puntos_interes_mexico)
+
+distancias <- spdep::dnearneigh(coordinates(puntos_interes_mexico), d1 = 0, d2 = 50) # Ajusta el valor de d2
+w <- spdep::nb2listw(distancias, style = "B")
+
+complete_cases <- complete.cases(values_secma, values_primf)
+values_secma <- values_secma[complete_cases]
+values_primf <- values_primf[complete_cases]
+moran_result_secma <- spdep::moran.test(values_secma, w)
+moran_result_primf <- spdep::moran.test(values_primf, w)
+
+moran<- moran.test(values_secma,w)
 
 
 
