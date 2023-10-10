@@ -1,10 +1,11 @@
+################################################################################
 setwd("C:/serviciosocial/DATOS")
 
 library(ncdf4) # package for netcdf manipulation
 library(raster) # package for raster manipulation
 library(sf) # package for geospatial analysis
 library(ggplot2)
-
+################################################################################
 sts<-nc_open("states.nc")
 rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.primn_2015 <-raster("states.nc", var="primn",band=1165)
@@ -136,8 +137,8 @@ datos_filtrados <- subset(df_forsec_limpio, layer != 0)
 df_secma_limpio<- na.omit(df_secma)
 datosfil_secma<- subset(df_secma_limpio, layer != 0)
 
-#############################################################################################################
-#Hacer un condicional 
+################################################################################
+#############################Hacer un condicional primer intento ##########
 rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.primn_2015 <-raster("states.nc", var="primn",band=1165)
 
@@ -166,7 +167,7 @@ secma_reasig <- reclassify(rasX.secma_2015, regla)
 coords <- xyFromCell(rasX.secma_2015, 1:ncell(rasX.secma_2015))
 valores_iguales_a_1 <- extract(rasX.secma_2015, coords[as.logical(rasX.secma_2015[] == 1), ])
 
-## Para poder elimina los datos donde sea =1 en dos raster, maxprimf y minsecma, se debe hacer:
+# Para poder elimina los datos donde sea =1 en dos raster, maxprimf y minsecma, se debe hacer:
 
 exclusion <- function(x, y) {
   resultado <- ifelse(x == 1 & y == 1, NA, ifelse(x == 1 | y == 1, 1, NA))
@@ -185,15 +186,19 @@ plot(rasx)
 Spatial(sts$primf)
 library(sp)
 
-##########################################################
+##########################################################SEGUNDO#####
 rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
+rasX.primn_2015 <-raster("states.nc", var="primn",band=1165)
 
-df_primf<-as.data.frame(rasX.primf_2015)
-df_secma<-as.data.frame(rasX.secma_2015)
+rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015
+suma_PFYNF <- overlay(rasX.primf_2015, rasX.primn_2015, fun = function(x, y) {
+  ifelse(x == y, x, x + y)})
+# los codigos anteriores dan el mismo resultado
+
 
 max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
-rasX.secma_2015[rasX.primf_2015 == 1]<-max.secma
+rasX.secma_2015[rasX.PFYNF == 1]<-max.secma
 summary(rasX.secma_2015@data@values)
 
 plot(rasX.secma_2015)
