@@ -192,6 +192,8 @@ rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
 rasX.primn_2015 <-raster("states.nc", var="primn",band=1165)
 
 rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015
+rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015
+
 suma_PFYNF <- overlay(rasX.primf_2015, rasX.primn_2015, fun = function(x, y) {
   ifelse(x == y, x, x + y)})
 # los codigos anteriores dan el mismo resultado
@@ -284,6 +286,11 @@ cuartil_4 <- quantile(values(rasX.secma_2015), probs = 0.75, na.rm=T)
 mascara_cuartil_4 <- rasX.secma_2015 > cuartil_4
 plot(mascara_cuartil_4)
 
+cuartil_1<- quantile(values(rasX.secma_2015), probs = 0.25, na.rm= T)
+mascara_cuartil_1 <- rasX.secma_2015 >cuartil_1
+plot(mascara_cuartil_1)
+cuartil_1
+
 ##ejemplo profe
 X= 1:1000
 nas=sample(X,10)
@@ -342,16 +349,15 @@ modelo<- rpart(layer.1~
                  potentially.non.forested.secondary.land+
                  C3.annual.crops+ C4.annual.crops+ C4.perennial.crops+
                  C3.perennial.crops+C3.nitrogen.fixing.crops+
-                 managed.pasture+ rangeland+ secondary.mean.biomass.carbon.density+
-                 C3.annual.crops+  urban.land + secondary.mean.age
+                 managed.pasture+ rangeland+
+                 C3.annual.crops+ urban.land+ forested.primary.land+ non.forested.primary.land
                ,data = df_states_rasters, method = "class")
 
-modelo2<- rpart(clase~secondary.mean.age
-                ,data = df_states_rasters, method = "class")
-
-df_states_rasters$clase=clase
-
 rpart.plot(modelo)
+
+## comparar con el mismo secma, clase (cuartil 4), no clase (cuaril 1,2,3) 16/10/2023
+## hacer otro sobre el primer cuartil (modelo2)
+## asirgnar el grupo del cuartil con numero 1,2,3,4 a los datos contenidos en mascara
 
 
 
