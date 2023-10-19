@@ -190,6 +190,8 @@ library(sp)
 rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
 rasX.primn_2015 <-raster("states.nc", var="primn",band=1165)
+rasX.secdf_2015 <-raster("states.nc", var="secdf",band=1165)
+rasX.secdn_2015 <-raster("states.nc", var="secdn",band=1165)
 
 rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015
 rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015
@@ -286,10 +288,19 @@ cuartil_4 <- quantile(values(rasX.secma_2015), probs = 0.75, na.rm=T)
 mascara_cuartil_4 <- rasX.secma_2015 > cuartil_4
 plot(mascara_cuartil_4)
 
-cuartil_1<- quantile(values(rasX.secma_2015), probs = 0.25, na.rm= T)
+cuartil_1<- quantile(values(rasX.secma_2015), probs = 0, na.rm= T)
 mascara_cuartil_1 <- rasX.secma_2015 >cuartil_1
 plot(mascara_cuartil_1)
 cuartil_1
+
+cuartil_3<- quantile(values(rasX.secma_2015), probs =0.50, na.rm= T)
+mascara_cuartil_3 <- rasX.secma_2015 > cuartil_3
+plot(mascara_cuartil_3)
+
+cuartil_2<- quantile(values(rasX.secma_2015), probs =0.25, na.rm= T)
+mascara_cuartil_2<- rasX.secma_2015 >cuartil_2
+plot(mascara_cuartil_2)
+
 
 ##ejemplo profe
 X= 1:1000
@@ -336,15 +347,15 @@ df_pastr<-as.data.frame(rasX.pastr_2015)
 df_range<-as.data.frame(rasX.range_2015)
 df_secmb<-as.data.frame(rasX.secmb_2015)
 df_PFYNF<- as.data.frame(rasX.PFYNF)
-df_mascara<-as.data.frame(mascara_cuartil_4)
+df_mascara_4<-as.data.frame(mascara_cuartil_4)
 
 df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_urban,
                                df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,df_secmb,
-                               df_PFYNF, df_mascara)##<- transformar a un special object de sp
+                               df_PFYNF, df_mascara_4)##<- transformar a un special object de sp
 
 library(rpart.plot)
 library (rpart)
-modelo<- rpart(layer.1~
+modelo_cuartil_4<- rpart(layer.1~
                  + potentially.forested.secondary.land+
                  potentially.non.forested.secondary.land+
                  C3.annual.crops+ C4.annual.crops+ C4.perennial.crops+
@@ -356,23 +367,90 @@ modelo<- rpart(layer.1~
 rpart.plot(modelo)
 
 ## comparar con el mismo secma, clase (cuartil 4), no clase (cuaril 1,2,3) 16/10/2023
+
+df_cuartil1 <- as.data.frame(mascara_cuartil_1)
+df_cuartil2 <- as.data.frame(mascara_cuartil_2)
+df_cuartil3 <- as.data.frame(mascara_cuartil_3)
+df_cuartil4 <- as.data.frame(mascara_cuartil_4)
+
+df_cuartiles<- data.frame(df_cuartil1, df_cuartil2, df_cuartil3, df_cuartil4)
+
+modelo_cuartil<- rpart(layer.3~ 
+                 + layer.2 + layer + layer.1
+               ,data = df_cuartiles, method = "class")
+rpart.plot(modelo_cuartil)
+
 ## hacer otro sobre el primer cuartil (modelo2)
-## asirgnar el grupo del cuartil con numero 1,2,3,4 a los datos contenidos en mascara
 
+df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_urban,
+                               df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,df_secmb,
+                               df_PFYNF, df_mascara_4)##<- transformar a un special object de sp
 
+library(rpart.plot)
+library (rpart)
+modelo_cuartil_4<- rpart(layer.1~
+                           + potentially.forested.secondary.land+
+                           potentially.non.forested.secondary.land+
+                           C3.annual.crops+ C4.annual.crops+ C4.perennial.crops+
+                           C3.perennial.crops+C3.nitrogen.fixing.crops+
+                           managed.pasture+ rangeland+
+                           C3.annual.crops+ urban.land+ forested.primary.land+ non.forested.primary.land
+                         ,data = df_states_rasters, method = "class")
 
+rpart.plot(modelo)
 
+################### FALLIDO asirgnar el grupo del cuartil con numero 1,2,3,4 a los datos contenidos en mascara
 
+divided_rasters <- disaggregate(rasX.secma_2015, fact = 2)
 
+# Crear una lista para almacenar los cuartiles de cada parte
+quartile_rasters <- list()
 
+calculate_quartiles <- function(x) {
+  # Calcular los cuartiles
+  quartiles <- quantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), na.rm = TRUE)
+  
+  # Asignar cuartiles
+  cuartiles <- cut(x, breaks = quartiles, labels = 1:4)
+  
+  return(cuartiles)
+}
 
+# Calcular los cuartiles para cada parte del raster
+for (i in 1:4) {
+  # Extraer valores de cada parte
+  values_part <- extract(divided_rasters[[i]], divided_rasters[[i]])
+  
+  # Calcular los cuartiles y asignarlos a la parte del raster
+  quartile_rasters[[i]] <- calculate_quartiles(values_part)
+}
 
+############# FALLIDO INTENTO 2
 
+# Obtener la extensión del raster
+ext <- extent(rasX.secma_2015)
 
+# Calcular los límites de las 4 partes
+xmid <- (ext@xmin + ext@xmax) / 2
+ymid <- (ext@ymin + ext@ymax) / 2
 
+# Crear las extensiones para cada parte
+part1 <- extent(ext@xmin, xmid, ext@ymin, ymid)
+part2 <- extent(xmid, ext@xmax, ext@ymin, ymid)
+part3 <- extent(ext@xmin, xmid, ymid, ext@ymax)
+part4 <- extent(xmid, ext@xmax, ymid, ext@ymax)
 
+# Recortar el raster en 4 partes iguales
+part_raster1 <- crop(rasX.secma_2015, part1)
+part_raster2 <- crop(rasX.secma_2015, part2)
+part_raster3 <- crop(rasX.secma_2015, part3)
+part_raster4 <- crop(rasX.secma_2015, part4)
 
-
+#### otra manera
+raster_dividido <- cut(getValues(rasX.secma_2015), breaks = 4, labels = 1:4)
+raster_dividido <- setValues(rasX.secma_2015, raster_dividido)
+plot(raster_dividido)
+df_dividido <- as.data.frame(raster_dividido)
 
 
 
