@@ -50,6 +50,7 @@ rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
 
 max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
-rasX.secma_2015[rasX.PFYNF == 1]<-max.secma
+rasX.secma_2015[rasX.primf_2015 == 1]<-max.secma
 plot(rasX.secma_2015)
 ~~~
+
