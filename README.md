@@ -3,8 +3,8 @@ El cambio de uso del suelo se refiere a la transformación de una determinada á
 
 El índice de sucesión, por otro lado, es una medida utilizada en ecología para evaluar y entender el proceso de cambio en la vegetación y la biodiversidad de un área a lo largo del tiempo. Este índice proporciona información sobre cómo las especies vegetales y animales pueden cambiar y evolucionar en respuesta a disturbios naturales o actividades humanas, como incendios forestales, tala de árboles o restauración de áreas degradadas. Al analizar el índice de sucesión, los ecólogos pueden obtener una mejor comprensión de cómo los ecosistemas se recuperan o se transforman después de disturbios, y cómo se pueden tomar medidas para conservar o restaurar la biodiversidad y la salud de los ecosistemas.
 ##### Todos los datos seran manejados en el software R
-[![Sucesión Ecológica](https://th.bing.com/th/id/OIG.vftVLKJjBnldIU5FsaHR?pid=ImgGn "Sucesión Ecológica")](https://th.bing.com/th/id/OIG.vftVLKJjBnldIU5FsaHR?pid=ImgGn "Sucesión Ecológica")
-Preoceso de sucecion ecologica, donde el primero es la perturbacion, y al ultimo una recuperacion del ecosistema en cuestion, pasando por diversas etapas, por ejemplo, la aparicion de plantas pioneras, plantas madre, etc.
+<img src="https://3.bp.blogspot.com/-yau995nEnw0/Uyr0XN9kXGI/AAAAAAAAAMo/LO8KN2bFzfQ/s1600/sucesiones-ciencias7_1477.jpg" width="50%")
+Proceso de sucecion ecologica, donde el primero es la perturbacion, y al ultimo una recuperacion del ecosistema en cuestion, pasando por diversas etapas, por ejemplo, la aparicion de plantas pioneras, plantas madre, etc.
 ## Obteniendo los datos
 Los datos trabajados se pueden obtener desde el portal [Land-Use-Harmonization](https://luh.umd.edu/ "Land-use-harmonization") , en su version [LUH2 v2h Release (10/14/16)](https://luh.umd.edu/LUH2/LUH2_v2h/states.nc "LUH2 v2h Release (10/14/16)"), la cual contiene datos historicos de el año 850 hasta el año 2015.
 ## Carga y visualizacion de los datos
