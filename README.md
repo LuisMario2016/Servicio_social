@@ -68,6 +68,7 @@ cuartil_4 <- quantile(values(rasX.secma_2015), probs = 0.75, na.rm=T)
 mascara_cuartil_4 <- rasX.secma_2015 > cuartil_4
 plot(mascara_cuartil_4)
 ~~~
+##Construyendo el arbol de clasificación
 Como el paquete Rpart no nos deja trabajar directamente con variables tipo raster, se debe convertir los datos a un data frame, entonces cada variable es convertida a un data frame, y posterior se unen todas en un solo data frame.
 ~~~
 df_primf<-as.data.frame(rasX.primf_2015)
