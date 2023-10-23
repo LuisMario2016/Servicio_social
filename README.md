@@ -54,5 +54,59 @@ rasX.secma_2015[rasX.primf_2015 == 1]<-max.secma
 plot(rasX.secma_2015)
 ~~~
 [![Secma corregido](https://github.com/LuisMario2016/Servicio_social/blob/main/secmacorregido.png "Secma corregido")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/secmacorregido.png?token=GHSAT0AAAAAACIFWB37ROCMZBXPLXRUUQKMZJV4G3A "Secma corregido")
+## Seleccion de la variable predictora
+Para conocer acerca de como estos datos de secma, se realiza un arbol de clasificacion con la ayuda de la libreria [Rpart](https://www.rdocumentation.org/packages/rpart/versions/4.1.21/topics/rpart "Rpart"), esto con el fin de averiguar donde es que estos valores estan clasificados. Para ello como priemer paso, debemos crear dos variables que nos representen la cobertura total, es decir vegetacion primaria foretal mas la no forestal, asi como la vegetacion secundaria forestal y no forestal.
+~~~
+rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015 #Vegetacion primaria forestal+ no forestal
+rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015 #Vegetacion secundarias forestal + no forestal
+~~~
+Creamos una variable clasificadora para nuestro arbol, en este caso es el 4 cuatil de los datos contenidos en secma, ya que estos son las edades mas recientes de perturbacion
+~~~
+cuartil_4 <- quantile(values(rasX.secma_2015), probs = 0.75, na.rm=T)
+mascara_cuartil_4 <- rasX.secma_2015 > cuartil_4
+plot(mascara_cuartil_4)
+~~~
+Como el paquete Rpart no nos deja trabajar directamente con variables tipo raster, se debe convertir los datos a un data frame, entonces cada variable es convertida a un data frame, y posterior se unen todas en un solo data frame.
+~~~
+df_primf<-as.data.frame(rasX.primf_2015)
+df_primn<-as.data.frame(rasX.primn_2015)
+df_secdf<-as.data.frame(rasX.secdf_2015)
+df_secdn<-as.data.frame(rasX.secdn_2015)
+df_secma<-as.data.frame(rasX.secma_2015)
+df_urban<-as.data.frame(rasX.urban_2015)
+df_c3ann<-as.data.frame(rasX.c3ann_2015)
+df_c4ann<-as.data.frame(rasX.c4ann_2015)
+df_c3per<-as.data.frame(rasX.c3per_2015)
+df_c4per<-as.data.frame(rasX.c4per_2015)
+df_c3nfx<-as.data.frame(rasX.c3nfx_2015)
+df_pastr<-as.data.frame(rasX.pastr_2015)
+df_range<-as.data.frame(rasX.range_2015)
+df_PFYNF<- as.data.frame(rasX.PFYNF)
+df_mascara_4<-as.data.frame(mascara_cuartil_4)
+
+df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_urban,
+                               df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,
+                               df_PFYNF, df_mascara_4)
+~~~
+Para construir el arbol utilizamos el metodo "class",  seleccionamos como clase a el cuartil 4 de los datos contenidos en secma (layer.1), y como variables predictoras a las demas (urban.land, prennial, c3.annual,crops, c4.annual,crops...)
+~~~
+Install.packages("Rpart") #Solo si no cuenta con la librerias
+install.packages("rpart.plot") 
+
+library(rpart.plot)
+library (rpart) #para una visualizacion mas amigable del árbol
+modelo_cuartil_4<- rpart(layer.1~
+                 + potentially.forested.secondary.land+
+                 potentially.non.forested.secondary.land+
+                 C3.annual.crops+ C4.annual.crops+ C4.perennial.crops+
+                 C3.perennial.crops+C3.nitrogen.fixing.crops+
+                 managed.pasture+ rangeland+
+                 C3.annual.crops+ urban.land+ forested.primary.land+
+				 non.forested.primary.land
+               ,data = df_states_rasters, method = "class")
+
+rpart.plot(modelo_cuartil_4)
+~~~
+[![Arbol de decision](https://github.com/LuisMario2016/Servicio_social/blob/main/arbol%20cuartil%204.png "Arbol de decision")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20cuartil%204.png?token=GHSAT0AAAAAACIFWB36H4IQRPONYBI2SQN6ZJV5I4A "Arbol de decision")
 
 
