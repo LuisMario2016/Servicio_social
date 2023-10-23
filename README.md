@@ -53,5 +53,5 @@ max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
 rasX.secma_2015[rasX.primf_2015 == 1]<-max.secma
 plot(rasX.secma_2015)
 ~~~
-[![Secma, convirtiendo la edad más joven (1) reclasificandola a la edad más vieja de "primf (vegetacion primaria forestal)"](https://github.com/LuisMario2016/Servicio_social/blob/main/secmacorregido.png "Secma, convirtiendo la edad más joven (1) reclasificandola a la edad más vieja de "primf (vegetacion primaria forestal)"")](https://github.com/LuisMario2016/Servicio_social/blob/main/secmacorregido.png "Secma, convirtiendo la edad más joven (1) reclasificandola a la edad más vieja de "primf (vegetacion primaria forestal)"")
+[![Secma corregido](https://github.com/LuisMario2016/Servicio_social/blob/main/secmacorregido.png "Secma corregido")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/secmacorregido.png?token=GHSAT0AAAAAACIFWB37ROCMZBXPLXRUUQKMZJV4G3A "Secma corregido")
 
