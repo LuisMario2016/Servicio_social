@@ -49,6 +49,9 @@ Por lo que se tiene
 rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
 
+rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015 #Cobertura completa, vegetacion primaria forestal+ no forestal
+rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015 #Cobertura completa, vegetacion secundarias forestal y no forestal
+
 max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
 rasX.secma_2015[rasX.primf_2015 == 1]<-max.secma
 plot(rasX.secma_2015)
