@@ -110,6 +110,6 @@ modelo_cuartil_4<- rpart(layer.1~
 
 rpart.plot(modelo_cuartil_4)
 ~~~
-[![Arbol de decision](https://github.com/LuisMario2016/Servicio_social/blob/main/arbol%20cuartil%204.png "Arbol de decision")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20cuartil%204.png?token=GHSAT0AAAAAACIFWB36H4IQRPONYBI2SQN6ZJV5I4A "Arbol de decision")
+[![Arbol de decision]([https://github.com/LuisMario2016/Servicio_social/blob/main/arbol%20cuartil%204.png "Arbol de decision")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20cuartil%204.png?token=GHSAT0AAAAAACIFWB36H4IQRPONYBI2SQN6ZJV5I4A "Arbol de decision"](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20multiclase.jpg?token=GHSAT0AAAAAACIFWB37CW34OWALSGY74MTAZLRHCTA)https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20multiclase.jpg?token=GHSAT0AAAAAACIFWB37CW34OWALSGY74MTAZLRHCTA)
 
 
