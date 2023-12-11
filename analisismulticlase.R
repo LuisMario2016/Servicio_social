@@ -72,14 +72,14 @@ df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_u
 
 library(rpart.plot)
 library (rpart)
-df_states_rasters$layer.1 <- as.factor(df_states_rasters$layer.1)
-df_states_rasters$layer.2 <- as.factor(df_states_rasters$layer.2)
-df_states_rasters$layer.3 <- as.factor(df_states_rasters$layer.3)
-df_states_rasters$layer.4 <- as.factor(df_states_rasters$layer.4)
-df_states_rasters$combined_response <- interaction(df_states_rasters$layer.1, 
+df_states_rasters$layer.1 <- as.numeric(df_states_rasters$layer.1)
+df_states_rasters$layer.2 <- as.numeric(df_states_rasters$layer.2)
+df_states_rasters$layer.3 <- as.numeric(df_states_rasters$layer.3)
+df_states_rasters$layer.4 <- as.numeric(df_states_rasters$layer.4)
+df_states_rasters$combined_response <- as.numeric(interaction(df_states_rasters$layer.1, 
                                                    df_states_rasters$layer.2, 
                                                    df_states_rasters$layer.3, 
-                                                   df_states_rasters$layer.4)
+                                                   df_states_rasters$layer.4))
 
 modelo_multicuartil <- rpart(combined_response ~ 
                                potentially.forested.secondary.land + 
@@ -90,7 +90,25 @@ modelo_multicuartil <- rpart(combined_response ~
                                rangeland + C3.annual.crops + urban.land + 
                                forested.primary.land + non.forested.primary.land,
                              data = df_states_rasters, method = "class")
-rpart.plot(modelo_multicuartil, extra = 0, cex = .6, uniform = TRUE, space=0.0000000000000001)
+rpart.plot(modelo_multicuartil, extra = 0, cex = 0.7, uniform = TRUE, space=0.0000000000000001)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
