@@ -26,24 +26,6 @@ rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015
 
 max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
 rasX.secma_2015[rasX.FYNF_2015 == 1]<-max.secma
-summary(rasX.secma_2015@data@values)
-
-plot(rasX.secma_2015)
-
-rasX.primf_2015[rasX.secma_2015 == 1]<-max.secma
-
-cuartil_4 <- quantile(values(rasX.secma_2015), probs = 0.75, na.rm=T)
-mascara_cuartil_4 <- rasX.secma_2015 > cuartil_4
-
-cuartil_1<- quantile(values(rasX.secma_2015), probs = 0, na.rm= T)
-mascara_cuartil_1 <- rasX.secma_2015 >cuartil_1
-
-cuartil_3<- quantile(values(rasX.secma_2015), probs =0.50, na.rm= T)
-mascara_cuartil_3 <- rasX.secma_2015 > cuartil_3
-
-cuartil_2<- quantile(values(rasX.secma_2015), probs =0.25, na.rm= T)
-mascara_cuartil_2<- rasX.secma_2015 >cuartil_2
-
 
 df_primf<-as.data.frame(rasX.primf_2015)
 df_primn<-as.data.frame(rasX.primn_2015)
@@ -60,28 +42,20 @@ df_pastr<-as.data.frame(rasX.pastr_2015)
 df_range<-as.data.frame(rasX.range_2015)
 df_secmb<-as.data.frame(rasX.secmb_2015)
 df_FYNF<- as.data.frame(rasX.FYNF_2015)
-df_mascara_4<-as.data.frame(mascara_cuartil_4)
-df_mascara_3<-as.data.frame(mascara_cuartil_3)
-df_mascara_2<-as.data.frame(mascara_cuartil_2)
-df_mascara_1<-as.data.frame(mascara_cuartil_1)
+
 
 df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_urban,
                                df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,df_secmb,
-                               df_FYNF, df_mascara_4,df_mascara_3
-                               ,df_mascara_2,df_mascara_1)
-
+                               df_FYNF)
+df_states<- na.exclude(df_states_rasters)
+y= cut(df_states$secondary.mean.age,quantile(df_states$secondary.mean.age), include.lowest =T)
+y<-as.integer(y)
+df_states$cuartiles=y
+                       
 library(rpart.plot)
 library (rpart)
-df_states_rasters$layer.1 <- as.numeric(df_states_rasters$layer.1)
-df_states_rasters$layer.2 <- as.numeric(df_states_rasters$layer.2)
-df_states_rasters$layer.3 <- as.numeric(df_states_rasters$layer.3)
-df_states_rasters$layer.4 <- as.numeric(df_states_rasters$layer.4)
-df_states_rasters$combined_response <- as.numeric(interaction(df_states_rasters$layer.1, 
-                                                   df_states_rasters$layer.2, 
-                                                   df_states_rasters$layer.3, 
-                                                   df_states_rasters$layer.4))
 
-modelo_multicuartil <- rpart(combined_response ~ 
+modelo_multicuartil <- rpart(cuartiles ~ 
                                potentially.forested.secondary.land + 
                                potentially.non.forested.secondary.land + 
                                C3.annual.crops + C4.annual.crops + 
@@ -89,10 +63,8 @@ modelo_multicuartil <- rpart(combined_response ~
                                C3.nitrogen.fixing.crops + managed.pasture + 
                                rangeland + C3.annual.crops + urban.land + 
                                forested.primary.land + non.forested.primary.land,
-                             data = df_states_rasters, method = "class")
+                             data = df_states, method = "class")
 rpart.plot(modelo_multicuartil, extra = 0, cex = 0.7, uniform = TRUE, space=0.0000000000000001)
-
-
 
 
 
