@@ -62,11 +62,8 @@ Para conocer acerca de como estos datos de secma, se realiza un arbol de clasifi
 rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015 #Vegetacion primaria forestal+ no forestal
 rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015 #Vegetacion secundarias forestal + no forestal
 ~~~
-Creamos una variable clasificadora para nuestro arbol, en este caso es el 4 cuatil de los datos contenidos en secma, ya que estos son las edades mas recientes de perturbacion
-~~~
-cuartil_4 <- quantile(values(rasX.secma_2015), probs = 0.75, na.rm=T)
-mascara_cuartil_4 <- rasX.secma_2015 > cuartil_4
-plot(mascara_cuartil_4)
+max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
+rasX.secma_2015[rasX.FYNF_2015 == 1]<-max.secma
 ~~~
 ## Construyendo el árbol de decisión
 Como el paquete Rpart no nos deja trabajar directamente con variables tipo raster, se debe convertir los datos a un data frame, entonces cada variable es convertida a un data frame, y posterior se unen todas en un solo data frame.
@@ -88,28 +85,28 @@ df_PFYNF<- as.data.frame(rasX.PFYNF)
 df_mascara_4<-as.data.frame(mascara_cuartil_4)
 
 df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_urban,
-                               df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,
-                               df_PFYNF, df_mascara_4)
+                               df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,df_secmb,
+                               df_FYNF)
+df_states<- na.exclude(df_states_rasters)
 ~~~
-Para construir el arbol utilizamos el metodo "class",  seleccionamos como clase a el cuartil 4 de los datos contenidos en secma (layer.1), y como variables predictoras a las demas (urban.land, prennial, c3.annual,crops, c4.annual,crops...)
+y= cut(df_states$secondary.mean.age,quantile(df_states$secondary.mean.age), include.lowest =T)
+y<-as.integer(y)
+df_states$cuartiles=y
 ~~~
-Install.packages("Rpart") #Solo si no cuenta con la librerias
-install.packages("rpart.plot") 
+Para construir el arbol utilizamos el metodo "class",  seleccionamos como clase a la variable cuartiles, y como variables predictoras a las demas (urban.land, prennial, c3.annual,crops, c4.annual,crops...)
+~~~
+modelo_multicuartil <- rpart(cuartiles ~ 
+                               potentially.forested.secondary.land + 
+                               potentially.non.forested.secondary.land + 
+                               C3.annual.crops + C4.annual.crops + 
+                               C4.perennial.crops + C3.perennial.crops + 
+                               C3.nitrogen.fixing.crops + managed.pasture + 
+                               rangeland + C3.annual.crops + urban.land + 
+                               forested.primary.land + non.forested.primary.land,
+                             data = df_states, method = "class")
+rpart.plot(modelo_multicuartil, extra = 0, cex = 0.7, uniform = TRUE, space=0.0000000000000001)
+~~~
+[![Clasificador de los usos de suelo de acuerdo a que cuartil pertenecen, esto respecto a la edad secudaria promedio](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/multiclase_clasificador.png?token=GHSAT0AAAAAACM3HEN32CH3F5T3GGFFXF5SZNEUZYA "Clasificador de los usos de suelo de acuerdo a que cuartil pertenecen, esto respecto a la edad secudaria promedio")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/multiclase_clasificador.png?token=GHSAT0AAAAAACM3HEN32CH3F5T3GGFFXF5SZNEUZYA "Clasificador de los usos de suelo de acuerdo a que cuartil pertenecen, esto respecto a la edad secudaria promedio")
 
-library(rpart.plot)
-library (rpart) #para una visualizacion mas amigable del árbol
-modelo_cuartil_4<- rpart(layer.1~
-                 + potentially.forested.secondary.land+
-                 potentially.non.forested.secondary.land+
-                 C3.annual.crops+ C4.annual.crops+ C4.perennial.crops+
-                 C3.perennial.crops+C3.nitrogen.fixing.crops+
-                 managed.pasture+ rangeland+
-                 C3.annual.crops+ urban.land+ forested.primary.land+
-				 non.forested.primary.land
-               ,data = df_states_rasters, method = "class")
-
-rpart.plot(modelo_cuartil_4)
-~~~
-[![Arbol de decision]([https://github.com/LuisMario2016/Servicio_social/blob/main/arbol%20cuartil%204.png "Arbol de decision")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20cuartil%204.png?token=GHSAT0AAAAAACIFWB36H4IQRPONYBI2SQN6ZJV5I4A "Arbol de decision"](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20multiclase.jpg?token=GHSAT0AAAAAACIFWB37CW34OWALSGY74MTAZLRHCTA)https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/arbol%20multiclase.jpg?token=GHSAT0AAAAAACIFWB37CW34OWALSGY74MTAZLRHCTA)
 
 
