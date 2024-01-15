@@ -56,7 +56,7 @@ rasX.secma_2015[rasX.primf_2015 == 1]<-max.secma
 plot(rasX.secma_2015)
 ~~~
 [![Secma corregido](https://github.com/LuisMario2016/Servicio_social/blob/main/secmacorregido.png "Secma corregido")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/secmacorregido.png?token=GHSAT0AAAAAACIFWB37ROCMZBXPLXRUUQKMZJV4G3A "Secma corregido")
-## Seleccion de la variable predictora
+## Creacion de nuevas variables de interes
 Para conocer acerca de como estos datos de secma, se realiza un arbol de clasificacion con la ayuda de la libreria [Rpart](https://www.rdocumentation.org/packages/rpart/versions/4.1.21/topics/rpart "Rpart"), esto con el fin de averiguar donde es que estos valores estan clasificados. Para ello como priemer paso, debemos crear dos variables que nos representen la cobertura total, es decir vegetacion primaria foretal mas la no forestal, asi como la vegetacion secundaria forestal y no forestal.
 ~~~
 rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015 #Vegetacion primaria forestal+ no forestal
