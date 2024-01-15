@@ -61,34 +61,35 @@ Para conocer acerca de como estos datos de secma, se realiza un arbol de clasifi
 ~~~
 rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015 #Vegetacion primaria forestal+ no forestal
 rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015 #Vegetacion secundarias forestal + no forestal
-~~~
 max.secma<- cellStats(rasX.secma_2015,stat = "max", na.rm = TRUE)
 rasX.secma_2015[rasX.FYNF_2015 == 1]<-max.secma
 ~~~
-## Construyendo el árbol de decisión
+###  Construyendo el árbol de decisión
+
 Como el paquete Rpart no nos deja trabajar directamente con variables tipo raster, se debe convertir los datos a un data frame, entonces cada variable es convertida a un data frame, y posterior se unen todas en un solo data frame.
 ~~~
-df_primf<-as.data.frame(rasX.primf_2015)
-df_primn<-as.data.frame(rasX.primn_2015)
-df_secdf<-as.data.frame(rasX.secdf_2015)
-df_secdn<-as.data.frame(rasX.secdn_2015)
-df_secma<-as.data.frame(rasX.secma_2015)
-df_urban<-as.data.frame(rasX.urban_2015)
-df_c3ann<-as.data.frame(rasX.c3ann_2015)
-df_c4ann<-as.data.frame(rasX.c4ann_2015)
-df_c3per<-as.data.frame(rasX.c3per_2015)
-df_c4per<-as.data.frame(rasX.c4per_2015)
-df_c3nfx<-as.data.frame(rasX.c3nfx_2015)
-df_pastr<-as.data.frame(rasX.pastr_2015)
-df_range<-as.data.frame(rasX.range_2015)
-df_PFYNF<- as.data.frame(rasX.PFYNF)
-df_mascara_4<-as.data.frame(mascara_cuartil_4)
-~~~
+    df_primf<-as.data.frame(rasX.primf_2015)
+    df_primn<-as.data.frame(rasX.primn_2015)
+    df_secdf<-as.data.frame(rasX.secdf_2015)
+    df_secdn<-as.data.frame(rasX.secdn_2015)
+    df_secma<-as.data.frame(rasX.secma_2015)
+    df_urban<-as.data.frame(rasX.urban_2015)
+    df_c3ann<-as.data.frame(rasX.c3ann_2015)
+    df_c4ann<-as.data.frame(rasX.c4ann_2015)
+    df_c3per<-as.data.frame(rasX.c3per_2015)
+    df_c4per<-as.data.frame(rasX.c4per_2015)
+    df_c3nfx<-as.data.frame(rasX.c3nfx_2015)
+    df_pastr<-as.data.frame(rasX.pastr_2015)
+    df_range<-as.data.frame(rasX.range_2015)
+    df_PFYNF<- as.data.frame(rasX.PFYNF)
+    df_mascara_4<-as.data.frame(mascara_cuartil_4)
+
 df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_urban,
-                               df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,df_secmb,
-                               df_FYNF)
-~~~
+                               df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,df_secmb, df_FYNF)
+							   
 df_states<- na.exclude(df_states_rasters)
+~~~
+Esta linea de codigo con ayuda de la funcion cut, proporciona la variable secma en sus cuatro cuartiles, para poder utilizar esta nueva variable en el clasificador
 ~~~
 y= cut(df_states$secondary.mean.age,quantile(df_states$secondary.mean.age), include.lowest =T)
 y<-as.integer(y)
