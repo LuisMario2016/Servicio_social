@@ -83,10 +83,11 @@ df_pastr<-as.data.frame(rasX.pastr_2015)
 df_range<-as.data.frame(rasX.range_2015)
 df_PFYNF<- as.data.frame(rasX.PFYNF)
 df_mascara_4<-as.data.frame(mascara_cuartil_4)
-
+~~~
 df_states_rasters<- data.frame(df_primf,df_primn,df_secdf,df_secdn,df_secma,df_urban,
                                df_c3ann, df_c4ann, df_c4per, df_c3per, df_c3nfx,df_pastr,df_range,df_secmb,
                                df_FYNF)
+~~~
 df_states<- na.exclude(df_states_rasters)
 ~~~
 y= cut(df_states$secondary.mean.age,quantile(df_states$secondary.mean.age), include.lowest =T)
