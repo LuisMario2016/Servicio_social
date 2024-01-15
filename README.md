@@ -15,10 +15,8 @@ setwd("C:/serviciosocial/DATOS")
 library(ncdf4)      # package for netcdf manipulation
 library(raster)      # package for raster manipulation
 library(sf)            # package for geospatial analysis
-library(ggplot2)  #package for 
-library(rpart.plot) #package for 
-library (rpart)      #package for
-library (sp)          #package for
+library(rpart.plot) #package for visualization of classification tree
+library (rpart)      #package for method of classification tree
 ~~~
 Abrimos el archivo "states" para poder obtener las variables, en este caso utilizamos la banda 1165 (año 2015) para reducir la cantidad de datos.
 ~~~
