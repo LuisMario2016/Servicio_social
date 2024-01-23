@@ -4,7 +4,11 @@ El cambio de uso del suelo se refiere a la transformación de una determinada á
 El índice de sucesión, por otro lado, es una medida utilizada en ecología para evaluar y entender el proceso de cambio en la vegetación y la biodiversidad de un área a lo largo del tiempo. Este índice proporciona información sobre cómo las especies vegetales y animales pueden cambiar y evolucionar en respuesta a disturbios naturales o actividades humanas, como incendios forestales, tala de árboles o restauración de áreas degradadas. Al analizar el índice de sucesión, los ecólogos pueden obtener una mejor comprensión de cómo los ecosistemas se recuperan o se transforman después de disturbios, y cómo se pueden tomar medidas para conservar o restaurar la biodiversidad y la salud de los ecosistemas.
 ##### Todos los datos seran manejados en el software R
 [![Sucesion ecologica](https://3.bp.blogspot.com/-yau995nEnw0/Uyr0XN9kXGI/AAAAAAAAAMo/LO8KN2bFzfQ/s1600/sucesiones-ciencias7_1477.jpg "Sucesion ecologica")](https://3.bp.blogspot.com/-yau995nEnw0/Uyr0XN9kXGI/AAAAAAAAAMo/LO8KN2bFzfQ/s1600/sucesiones-ciencias7_1477.jpg "Sucesion ecologica")
-Proceso de sucecion ecologica, donde el primero es la perturbacion, y al ultimo una recuperacion del ecosistema en cuestion, pasando por diversas etapas, por ejemplo, la aparicion de plantas pioneras, plantas madre, etc.
+######  Proceso de sucecion ecologica, donde el primer suceso es la perturbacion, y al ultimo es una recuperacion del ecosistema en cuestion, pasando por diversas etapas, por ejemplo, la aparicion de plantas pioneras, plantas madre, etc.
+
+------------
+
+
 ## Obteniendo los datos
 Los datos trabajados se pueden obtener desde el portal [Land-Use-Harmonization](https://luh.umd.edu/ "Land-use-harmonization") , en su version [LUH2 v2h Release (10/14/16)](https://luh.umd.edu/LUH2/LUH2_v2h/states.nc "LUH2 v2h Release (10/14/16)"), la cual contiene datos historicos de el año 850 hasta el año 2015.
 ## Carga y visualizacion de los datos
@@ -42,9 +46,9 @@ Para visualizar cualquier variable y conocer un resumen de los datos, se utiliza
 ~~~
 plot(rasX.VARIABLE INTERES_2015)
 ~~~
-## condicional ¿que titulo
-Los datos registrados en la variable "secma" (secondary mean age), tienen una representación 
-Por lo que se tiene 
+## Correccion y ajuste de indice "SECMA"
+Los datos registrados en la variable "secma" (secondary mean age), tienen una representación en años, donde los valores mas altos serian un sitio que ya paso la etapa sucecional, es decir, ya esta restaurado, de igual forma en "primf" la etapa de desarrollo de un bosque se mide de 0 a 1 siendo 0 un bosque establecido y 1 un bosque de edad joven.
+Por lo tanto a manera de asignacion, mediante un condicional establecemos que los valores maximos de secma sean asignados a los valores =1 en primf, confirmando que un valor alto de secma es un sitio que ha estado sufriendo cambios, llegando al establecimiento.
 ~~~
 rasX.primf_2015 <-raster("states.nc", var="primf",band=1165)
 rasX.secma_2015 <-raster("states.nc", var="secma",band=1165)
@@ -55,7 +59,7 @@ plot(rasX.secma_2015)
 ~~~
 [![Secma corregido](https://github.com/LuisMario2016/Servicio_social/blob/main/secmacorregido.png "Secma corregido")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/secmacorregido.png?token=GHSAT0AAAAAACIFWB37ROCMZBXPLXRUUQKMZJV4G3A "Secma corregido")
 ## Creacion de nuevas variables de interes
-Para conocer acerca de como estos datos de secma, se realiza un arbol de clasificacion con la ayuda de la libreria [Rpart](https://www.rdocumentation.org/packages/rpart/versions/4.1.21/topics/rpart "Rpart"), esto con el fin de averiguar donde es que estos valores estan clasificados. Para ello como priemer paso, debemos crear dos variables que nos representen la cobertura total, es decir vegetacion primaria foretal mas la no forestal, asi como la vegetacion secundaria forestal y no forestal.
+Para conocer acerca de como estos datos de secma, se realiza un arbol de clasificacion con la ayuda de la libreria [Rpart](https://www.rdocumentation.org/packages/rpart/versions/4.1.21/topics/rpart "Rpart"), esto con el fin de averiguar donde es que estos valores estan clasificados. Para ello como priemer paso, debemos crear dos variables que nos representen la cobertura total, es decir vegetacion primaria forestal mas la no forestal, asi como la vegetacion secundaria forestal y no forestal. Esto con la finalidad de poder tener un panorama completo acerca de ambas coberturas.
 ~~~
 rasX.PFYNF<- rasX.primf_2015+rasX.primn_2015 #Vegetacion primaria forestal+ no forestal
 rasX.SFYNF<- rasX.secdf_2015+rasX.secdn_2015 #Vegetacion secundarias forestal + no forestal
@@ -107,6 +111,3 @@ modelo_multicuartil <- rpart(cuartiles ~
 rpart.plot(modelo_multicuartil, extra = 0, cex = 0.7, uniform = TRUE, space=0.0000000000000001)
 ~~~
 [![arbol](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/multiclase_clasificador.png?token=GHSAT0AAAAAACM3HEN3MACE2O5YSBKT72LYZNPI7PA "arbol")](https://github.com/LuisMario2016/Servicio_social/blob/main/multiclase_clasificador.png "arbol")
-
-
-
