@@ -106,7 +106,7 @@ modelo_multicuartil <- rpart(cuartiles ~
                              data = df_states, method = "class")
 rpart.plot(modelo_multicuartil, extra = 0, cex = 0.7, uniform = TRUE, space=0.0000000000000001)
 ~~~
-[![Clasificador de los usos de suelo de acuerdo a que cuartil pertenecen, esto respecto a la edad secudaria promedio](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/multiclase_clasificador.png?token=GHSAT0AAAAAACM3HEN32CH3F5T3GGFFXF5SZNEUZYA "Clasificador de los usos de suelo de acuerdo a que cuartil pertenecen, esto respecto a la edad secudaria promedio")](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/multiclase_clasificador.png?token=GHSAT0AAAAAACM3HEN32CH3F5T3GGFFXF5SZNEUZYA "Clasificador de los usos de suelo de acuerdo a que cuartil pertenecen, esto respecto a la edad secudaria promedio")
+[![arbol](https://raw.githubusercontent.com/LuisMario2016/Servicio_social/main/multiclase_clasificador.png?token=GHSAT0AAAAAACM3HEN3MACE2O5YSBKT72LYZNPI7PA "arbol")](https://github.com/LuisMario2016/Servicio_social/blob/main/multiclase_clasificador.png "arbol")
 
 
 
