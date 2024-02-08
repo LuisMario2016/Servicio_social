@@ -9,7 +9,7 @@ En años recientes se ha notado un incremento global en la temperatura de la tie
 ## Objetivos
 - Elaborar un índice de sucesión utilizando machine learning para conocer el estado/condición de uso de suelo respecto a datos geoespaciales.
 - Comprender la proporción del cambio de las variables de cambio de uso de suelo de países de gran crecimiento poblacional y de actividad económica.
-- Crear un modelo lineal de predicción del comportamiento de las variables para 2100 para 10 países con gran crecimiento económico.
+- Crear un modelo lineal de predicción del comportamiento de las variables para el ano 2100, esto para 10 países con un gran crecimiento económico.
 
 # Indice de sucesión en cambio de uso del suelo
 El cambio de uso del suelo se refiere a la transformación de una determinada área geográfica o terreno de un tipo de uso, como agrícola, forestal, o natural, a otro tipo de uso, como urbano, industrial, o comercial. Este proceso implica la modificación de la cobertura y la vegetación del suelo, así como la alteración de las características naturales del entorno.
