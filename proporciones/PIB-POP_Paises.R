@@ -55,6 +55,26 @@ UK$PIB<-c(6996,	7718,	8199,	10928,	12541,	17162,	22579,	31946,	36941)
 UK$POP<-c(39221,	44916,	45059,	48226,	50946,	55632,	56620,	59145,	65396)
 UK<-UK[,-1]
 
+
+data_paises <- list(AUS = AUS, BRAZIL = BRAZIL, CANADA = CANADA, CHILE = CHILE, EUA = EUA, FRANCIA = FRANCIA, INDIA = INDIA, JAPAN = JAPAN, Mexico = Mexico, PORTUGAL = PORTUGAL, SINGAPURE = SINGAPURE, UK = UK)
+valores_pib_fila_2015<- sapply(data_paises, function(x) x[9, "PIB"])
+valores_pib_fila_2015$SINGAPURE <- NULL
+valores_pib_fila_2015 <- unlist(valores_pib_fila_2015)
+valores_pib_ordenados <- sort(valores_pib_fila_2015, decreasing = TRUE)
+barplot(valores_pib_ordenados, 
+        main = "Comparación de PIB 2015",
+        xlab = "", ylab = "PIB",
+        las = 2, col = "skyblue",cex.axis = 0.8)
+valores_POP_fila_2015<- sapply(data_paises, function(x) x[9, "POP"])
+valores_POP_fila_2015$SINGAPURE <- NULL
+valores_POP_fila_2015 <- unlist(valores_POP_fila_2015)
+valores_POP_ordenados <- sort(valores_POP_fila_2015, decreasing = TRUE)
+barplot(valores_POP_ordenados, 
+        main = "Comparación de PIB 2015",
+        xlab = "", ylab = "PIB", las=2, col ="skyblue",cex.axis = 0.6)
+plot(valores_pib_fila_2015,valores_POP_fila_2015, ylab= "POPULATION",xlab="PIB")
+text(valores_pib_fila_2015, valores_POP_fila_2015, labels = names(valores_pib_fila_2015), pos = 4, cex = 0.8)
+
 variables <- c("AUS", "BRAZIL", "CANADA", "CHILE", "EUA", "FRANCIA", "INDIA", "JAPAN", "Mexico", "PORTUGAL", "SINGAPURE", "UK")
 
 # Bucle para normalizar PIB y POP en cada variable
